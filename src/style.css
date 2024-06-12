@@ -65,10 +65,16 @@ button:focus-visible {
   background-color: #dad9e7;
   width: 2rem;
   height: 2rem;
+  transition-duration: 100ms;
+  transition-property: all;
 }
 
 .snek {
   background-color: #646cff;
+}
+
+.head {
+  background-color: green;
 }
 
 .food {
