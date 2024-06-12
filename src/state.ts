@@ -1,9 +1,10 @@
 import {
   GAME_AREA_SELECTOR,
-  HIGHSCORE_ID,
   HIGHSCORE_SELECTOR,
+  LOCALSTORAGE_PERSONAL_HIGHSCORE_ID,
   SCORE_SELECTOR,
 } from "./ids"
+import { addHighScoreIfNeeded } from "./scoreboard"
 import {
   type Direction,
   type Food,
@@ -18,10 +19,6 @@ let _isGameOver = false
 
 let currentScore = 0
 let highScore = 0
-let highScoresFromLS: Array<{
-  time: string
-  score: number
-}> = []
 
 let snek: Snek = []
 let food: Food = { x: 0, y: 0 }
@@ -61,25 +58,23 @@ function setHighscore(newHighscore: number) {
 }
 
 export function setupHighscore() {
-  const localStorageEntry = localStorage.getItem(HIGHSCORE_ID)
+  const localStorageEntry = localStorage.getItem(
+    LOCALSTORAGE_PERSONAL_HIGHSCORE_ID
+  )
 
   if (localStorageEntry) {
     try {
-      const parsed = JSON.parse(localStorageEntry) as Array<{
-        time: string
-        score: number
-      }>
-
-      highScoresFromLS = parsed
-
-      if (highScoresFromLS.length > 0)
-        setHighscore(Math.max(...parsed.map(({ score }) => score)))
-      else setHighscore(0)
+      setHighscore(Number.parseInt(localStorageEntry, 10) || 0)
     } catch {
-      localStorage.setItem(HIGHSCORE_ID, JSON.stringify([]))
+      localStorage.setItem(
+        LOCALSTORAGE_PERSONAL_HIGHSCORE_ID,
+        JSON.stringify(0)
+      )
+      setHighscore(0)
     }
   } else {
-    localStorage.setItem(HIGHSCORE_ID, JSON.stringify([]))
+    localStorage.setItem(LOCALSTORAGE_PERSONAL_HIGHSCORE_ID, JSON.stringify(0))
+    setHighscore(0)
   }
 }
 
@@ -190,19 +185,13 @@ export function moveSnek() {
 export function drawGameOver() {
   if (currentScore > highScore) {
     setHighscore(currentScore)
+    localStorage.setItem(
+      LOCALSTORAGE_PERSONAL_HIGHSCORE_ID,
+      String(currentScore)
+    )
   }
 
-  if (
-    highScoresFromLS.length < 5 ||
-    highScoresFromLS.some(({ score }) => score < currentScore)
-  ) {
-    highScoresFromLS.push({
-      score: currentScore,
-      time: new Date().toISOString(),
-    })
-
-    localStorage.setItem(HIGHSCORE_ID, JSON.stringify(highScoresFromLS))
-  }
+  addHighScoreIfNeeded(currentScore)
 
   alert("Game over!") // eslint-disable-line no-alert
 }

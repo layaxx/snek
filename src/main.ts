@@ -7,13 +7,18 @@ import {
 import {
   GAME_AREA_ID,
   HIGHSCORE_ID,
+  LOCALSTORAGE_NAME_ID,
+  NAME_INPUT_ID,
+  NAME_INPUT_SELECTOR,
   PAUSE_BUTTON_ID,
   PAUSE_BUTTON_SELECTOR,
+  SCOREBOARD_ID,
   SCORE_ID,
   SPEED_DISPLAY_ID,
   SPEED_DISPLAY_SELECTOR,
   SPEED_SLIDER_SELECTOR,
 } from "./ids"
+import { loadScoreboard, updateName } from "./scoreboard"
 import {
   defaultSpeed,
   gameAreaSize,
@@ -43,6 +48,12 @@ document.querySelector<HTMLDivElement>("#app")!.innerHTML = `
       <br />
       <span id="${SPEED_DISPLAY_ID}">${defaultSpeed}</span>
     </p>
+
+    <div>
+      <h2>Scoreboard</h2>
+      <label>Name: <input type="text" id=${NAME_INPUT_ID}></input></label>
+      <div id="${SCOREBOARD_ID}"></div>
+    </div>
   </div>
 `
 
@@ -52,7 +63,13 @@ function init() {
   setupSnek()
   setupEventHandlers()
 
-  startGame()
+  loadScoreboard()
+
+  const name = localStorage.getItem(LOCALSTORAGE_NAME_ID) ?? "Anon"
+  const nameInput =
+    document.querySelector<HTMLInputElement>(NAME_INPUT_SELECTOR)
+
+  if (nameInput) nameInput.value = name
 }
 
 init()
@@ -71,6 +88,12 @@ function getDirection(key: string) {
 }
 
 function setupEventHandlers() {
+  document
+    .querySelector<HTMLInputElement>(NAME_INPUT_SELECTOR)
+    ?.addEventListener("change", (event) => {
+      const inputElement = event.currentTarget as HTMLInputElement
+      updateName(inputElement.value)
+    })
   document
     .querySelector<HTMLInputElement>(SPEED_SLIDER_SELECTOR)
     ?.addEventListener("change", (event) => {

@@ -8,7 +8,7 @@ import {
   setIsRunning,
 } from "./state"
 
-let intervalID: number | undefined
+let intervalID: undefined | ReturnType<typeof setInterval>
 
 function tick() {
   moveSnek()
