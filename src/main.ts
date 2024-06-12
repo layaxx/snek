@@ -1,24 +1,28 @@
-import './style.css'
-import typescriptLogo from './typescript.svg'
-import viteLogo from '/vite.svg'
-import { setupCounter } from './counter.ts'
+import { gameAreaSize, setupGameArea, setupSnek } from "./state"
+import "./style.css"
 
-document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
+export const GAME_AREA_ID = "game-area" as const
+export const SCORE_ID = "score" as const
+
+document.querySelector<HTMLDivElement>("#app")!.innerHTML = `
   <div>
-    <a href="https://vitejs.dev" target="_blank">
-      <img src="${viteLogo}" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://www.typescriptlang.org/" target="_blank">
-      <img src="${typescriptLogo}" class="logo vanilla" alt="TypeScript logo" />
-    </a>
-    <h1>Vite + TypeScript</h1>
-    <div class="card">
-      <button id="counter" type="button"></button>
+    <h1>snek</h1>
+    <h2>Score: <span id=${SCORE_ID}></span></h2>
+    <div class="area" id="${GAME_AREA_ID}" style="grid-template-columns: repeat(${gameAreaSize}, 1fr)">
     </div>
-    <p class="read-the-docs">
-      Click on the Vite and TypeScript logos to learn more
-    </p>
   </div>
 `
 
-setupCounter(document.querySelector<HTMLButtonElement>('#counter')!)
+function init() {
+  setupGameArea()
+  setupEventHandlers()
+  setupSnek()
+
+  // startGame()
+}
+
+init()
+
+function setupEventHandlers() {
+  // throw new Error("Function not implemented.")
+}
