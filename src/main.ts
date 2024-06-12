@@ -1,16 +1,26 @@
-import { togglePauseStatus, pauseGame, startGame } from "./gamelogic"
+import {
+  togglePauseStatus,
+  pauseGame,
+  startGame,
+  restartIfNeeded,
+} from "./gamelogic"
 import {
   GAME_AREA_ID,
   HIGHSCORE_ID,
   PAUSE_BUTTON_ID,
   PAUSE_BUTTON_SELECTOR,
   SCORE_ID,
+  SPEED_DISPLAY_ID,
+  SPEED_DISPLAY_SELECTOR,
+  SPEED_SLIDER_SELECTOR,
 } from "./ids"
 import {
+  defaultSpeed,
   gameAreaSize,
   isGameOver,
   isRunning,
   setNewDirection,
+  setNewSpeed,
   setupGameArea,
   setupHighscore,
   setupSnek,
@@ -24,6 +34,15 @@ document.querySelector<HTMLDivElement>("#app")!.innerHTML = `
     <button id="${PAUSE_BUTTON_ID}">Pause</button>
     <div class="area" id="${GAME_AREA_ID}" style="grid-template-columns: repeat(${gameAreaSize}, 1fr)">
     </div>
+
+    
+    <p>
+      slow
+      <input type="range" min="10" max="200" value="${defaultSpeed}" class="slider" id="speed-selector">
+      fast
+      <br />
+      <span id="${SPEED_DISPLAY_ID}">${defaultSpeed}</span>
+    </p>
   </div>
 `
 
@@ -52,6 +71,17 @@ function getDirection(key: string) {
 }
 
 function setupEventHandlers() {
+  document
+    .querySelector<HTMLInputElement>(SPEED_SLIDER_SELECTOR)
+    ?.addEventListener("change", (event) => {
+      const inputElement = event.currentTarget as HTMLInputElement
+      const newSpeed = Number.parseInt(inputElement.value, 10) || defaultSpeed
+      setNewSpeed(newSpeed)
+      restartIfNeeded()
+
+      document.querySelector(SPEED_DISPLAY_SELECTOR)!.textContent =
+        String(newSpeed)
+    })
   document.addEventListener(
     "keydown",
     (event) => {

@@ -6,3 +6,7 @@ export const PAUSE_BUTTON_ID = "pause-button"
 export const PAUSE_BUTTON_SELECTOR = "#" + PAUSE_BUTTON_ID
 export const HIGHSCORE_ID = "highscore"
 export const HIGHSCORE_SELECTOR = "#" + HIGHSCORE_ID
+export const SPEED_SLIDER_ID = "speed-selector"
+export const SPEED_SLIDER_SELECTOR = "#" + SPEED_SLIDER_ID
+export const SPEED_DISPLAY_ID = "speed-display"
+export const SPEED_DISPLAY_SELECTOR = "#" + SPEED_DISPLAY_ID

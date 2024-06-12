@@ -26,7 +26,8 @@ let highScoresFromLS: Array<{
 let snek: Snek = []
 let food: Food = { x: 0, y: 0 }
 let direction: Direction = "right"
-const speed = 50
+export const defaultSpeed = 50
+let speed = defaultSpeed
 
 let scorecard: Element | undefined
 let gameAreaElements: HTMLDivElement[] = []
@@ -45,6 +46,10 @@ export function getSpeed() {
 
 export function isGameOver() {
   return _isGameOver
+}
+
+export function setNewSpeed(newSpeed: number) {
+  speed = newSpeed
 }
 
 function setHighscore(newHighscore: number) {

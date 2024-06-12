@@ -34,6 +34,13 @@ export function pauseGame() {
     : "Continue"
 }
 
+export function restartIfNeeded() {
+  if (isRunning()) {
+    clearInterval(intervalID)
+    startGame()
+  }
+}
+
 export function togglePauseStatus() {
   if (isRunning()) {
     pauseGame()
