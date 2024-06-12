@@ -1,8 +1,6 @@
+import { GAME_AREA_ID, SCORE_ID } from "./ids"
 import { gameAreaSize, setupGameArea, setupSnek } from "./state"
 import "./style.css"
-
-export const GAME_AREA_ID = "game-area" as const
-export const SCORE_ID = "score" as const
 
 document.querySelector<HTMLDivElement>("#app")!.innerHTML = `
   <div>

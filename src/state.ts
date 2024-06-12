@@ -1,28 +1,33 @@
-import { GAME_AREA_ID } from "./main"
-import { Direction, Food, Point, Snake as Snek } from "./types"
+import { GAME_AREA_ID } from "./ids"
+import {
+  type Direction,
+  type Food,
+  type Point,
+  type Snake as Snek,
+} from "./types"
 
-var isRunning = false
-var isGameOver = false
+const isRunning = false
+const isGameOver = false
 
-var currentScore: number = 0
-var highScore: number = 0
+let currentScore = 0
+const highScore = 0
 
-var snek: Snek = []
-var food: Food | undefined = undefined
-var direction: Direction = "right"
-var speed: number = 50
+let snek: Snek = []
+let food: Food | undefined
+let direction: Direction = "right"
+const speed = 50
 
-var gameAreaElements: HTMLDivElement[] | undefined = undefined
+let gameAreaElements: HTMLDivElement[] | undefined
 export const gameAreaSize = 12
 
 export function setupGameArea() {
-  const gameArea = document.getElementById(GAME_AREA_ID)!
+  const gameArea = document.querySelector("#" + GAME_AREA_ID)!
   gameArea.innerHTML = ""
   const elements = []
   for (let i = 0; i < gameAreaSize * gameAreaSize; i++) {
     const cell = document.createElement("div")
     cell.classList.add("cell")
-    gameArea.appendChild(cell)
+    gameArea.append(cell)
     elements.push(cell)
   }
 
@@ -33,13 +38,13 @@ function setFood() {
   if (!gameAreaElements) throw new Error("Game area elements not set")
 
   if (food) {
-    gameAreaElements![pointToIndex(food)].classList.remove("food")
+    gameAreaElements[pointToIndex(food)].classList.remove("food")
   }
 
-  const freeFields = gameAreaElements!
-    .map((el, index) => ({
+  const freeFields = gameAreaElements
+    .map((element, index) => ({
       index,
-      isFree: !el.classList.contains("snek"),
+      isFree: !element.classList.contains("snek"),
     }))
     .filter((field) => field.isFree)
 
@@ -47,7 +52,7 @@ function setFood() {
     freeFields[Math.floor(Math.random() * freeFields.length)]
 
   food = indexToPoint(randomElement.index)
-  gameAreaElements![pointToIndex(food)].classList.add("food")
+  gameAreaElements[pointToIndex(food)].classList.add("food")
 }
 
 export function setupSnek() {
