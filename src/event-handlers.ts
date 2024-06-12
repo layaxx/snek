@@ -37,9 +37,35 @@ function getDirection(key: string) {
 
 let touchstart = { x: 0, y: 0 }
 let touchend = { x: 0, y: 0 }
-let startPosition = { x: 0, y: 0 }
-function stopScroll() {
-  window.scrollTo(startPosition.x, startPosition.y)
+
+// modern Chrome requires { passive: false } when adding event
+let supportsPassive = false
+try {
+  window.addEventListener(
+    "test",
+    () => {}, // eslint-disable-line @typescript-eslint/no-empty-function
+    Object.defineProperty({}, "passive", {
+      get() {
+        supportsPassive = true
+        return true
+      },
+    })
+  )
+} catch {}
+
+function preventDefault(event: { preventDefault: () => void }) {
+  event.preventDefault()
+}
+
+const wheelOpt = supportsPassive ? { passive: false } : false
+
+function disableScroll() {
+  window.addEventListener("touchmove", preventDefault, wheelOpt) // mobile
+}
+
+// call this to Enable
+function enableScroll() {
+  window.removeEventListener("touchmove", preventDefault)
 }
 
 function checkDirection(): Direction {
@@ -111,8 +137,8 @@ export function setupEventHandlers() {
       x: event.changedTouches[0].screenX,
       y: event.changedTouches[0].screenY,
     }
-    startPosition = { x: window.scrollX, y: window.scrollY }
-    if (isRunning()) window.addEventListener("scroll", stopScroll)
+
+    if (isRunning()) disableScroll()
   })
   document.addEventListener("touchend", (event) => {
     touchend = {
@@ -122,7 +148,7 @@ export function setupEventHandlers() {
 
     if (isRunning()) setNewDirection(checkDirection())
 
-    window.removeEventListener("scroll", stopScroll)
+    enableScroll()
   })
   document.addEventListener("visibilitychange", () => {
     if (document.hidden) {
