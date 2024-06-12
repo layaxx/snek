@@ -1,11 +1,18 @@
-import { pauseGame, startGame } from "./gamelogic"
-import { GAME_AREA_ID, SCORE_ID } from "./ids"
+import { togglePauseStatus, pauseGame, startGame } from "./gamelogic"
+import {
+  GAME_AREA_ID,
+  HIGHSCORE_ID,
+  PAUSE_BUTTON_ID,
+  PAUSE_BUTTON_SELECTOR,
+  SCORE_ID,
+} from "./ids"
 import {
   gameAreaSize,
   isGameOver,
   isRunning,
   setNewDirection,
   setupGameArea,
+  setupHighscore,
   setupSnek,
 } from "./state"
 import "./style.css"
@@ -13,13 +20,15 @@ import "./style.css"
 document.querySelector<HTMLDivElement>("#app")!.innerHTML = `
   <div>
     <h1>snek</h1>
-    <h2>Score: <span id=${SCORE_ID}>0</span></h2>
+    <h2>Score: <span id="${SCORE_ID}">0</span>, Highscore: <span id="${HIGHSCORE_ID}">0</span></h2>
+    <button id="${PAUSE_BUTTON_ID}">Pause</button>
     <div class="area" id="${GAME_AREA_ID}" style="grid-template-columns: repeat(${gameAreaSize}, 1fr)">
     </div>
   </div>
 `
 
 function init() {
+  setupHighscore()
   setupGameArea()
   setupSnek()
   setupEventHandlers()
@@ -78,4 +87,9 @@ function setupEventHandlers() {
     },
     { capture: true }
   )
+  document
+    .querySelector<HTMLButtonElement>(PAUSE_BUTTON_SELECTOR)
+    ?.addEventListener("click", () => {
+      togglePauseStatus()
+    })
 }

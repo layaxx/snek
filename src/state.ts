@@ -1,4 +1,9 @@
-import { GAME_AREA_SELECTOR, SCORE_SELECTOR } from "./ids"
+import {
+  GAME_AREA_SELECTOR,
+  HIGHSCORE_ID,
+  HIGHSCORE_SELECTOR,
+  SCORE_SELECTOR,
+} from "./ids"
 import {
   type Direction,
   type Food,
@@ -12,7 +17,11 @@ let _isRunning = false
 let _isGameOver = false
 
 let currentScore = 0
-const highScore = 0
+let highScore = 0
+let highScoresFromLS: Array<{
+  time: string
+  score: number
+}> = []
 
 let snek: Snek = []
 let food: Food = { x: 0, y: 0 }
@@ -36,6 +45,37 @@ export function getSpeed() {
 
 export function isGameOver() {
   return _isGameOver
+}
+
+function setHighscore(newHighscore: number) {
+  highScore = newHighscore
+
+  const highScoreBoard = document.querySelector(HIGHSCORE_SELECTOR)
+
+  if (highScoreBoard) highScoreBoard.textContent = String(newHighscore)
+}
+
+export function setupHighscore() {
+  const localStorageEntry = localStorage.getItem(HIGHSCORE_ID)
+
+  if (localStorageEntry) {
+    try {
+      const parsed = JSON.parse(localStorageEntry) as Array<{
+        time: string
+        score: number
+      }>
+
+      highScoresFromLS = parsed
+
+      if (highScoresFromLS.length > 0)
+        setHighscore(Math.max(...parsed.map(({ score }) => score)))
+      else setHighscore(0)
+    } catch {
+      localStorage.setItem(HIGHSCORE_ID, JSON.stringify([]))
+    }
+  } else {
+    localStorage.setItem(HIGHSCORE_ID, JSON.stringify([]))
+  }
 }
 
 export function setupGameArea() {
@@ -143,6 +183,22 @@ export function moveSnek() {
 }
 
 export function drawGameOver() {
+  if (currentScore > highScore) {
+    setHighscore(currentScore)
+  }
+
+  if (
+    highScoresFromLS.length < 5 ||
+    highScoresFromLS.some(({ score }) => score < currentScore)
+  ) {
+    highScoresFromLS.push({
+      score: currentScore,
+      time: new Date().toISOString(),
+    })
+
+    localStorage.setItem(HIGHSCORE_ID, JSON.stringify(highScoresFromLS))
+  }
+
   alert("Game over!") // eslint-disable-line no-alert
 }
 
