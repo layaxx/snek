@@ -6,6 +6,8 @@ import {
   isRunning,
   moveSnek,
   setIsRunning,
+  setupGameArea,
+  setupSnek,
 } from "./state"
 
 let intervalID: undefined | ReturnType<typeof setInterval>
@@ -45,6 +47,11 @@ export function togglePauseStatus() {
   if (isRunning()) {
     pauseGame()
   } else {
+    if (isGameOver()) {
+      setupGameArea()
+      setupSnek()
+    }
+
     startGame()
   }
 }
