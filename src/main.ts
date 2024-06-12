@@ -25,22 +25,23 @@ document.querySelector<HTMLDivElement>("#app")!.innerHTML = `
     <h1>snek</h1>
     <h2>Score: <span id="${SCORE_ID}">0</span>, Highscore: <span id="${HIGHSCORE_ID}">0</span></h2>
     <button id="${PAUSE_BUTTON_ID}">Start</button>
-    <div class="area" id="${GAME_AREA_ID}" style="grid-template-columns: repeat(${gameAreaSize}, 1fr)">
-    </div>
+    <div class="flex">
+      <div class="area" id="${GAME_AREA_ID}" style="grid-template-columns: repeat(${gameAreaSize}, 1fr)"></div>
 
-    
-    <p>
-      slow
-      <input type="range" min="10" max="200" value="${defaultSpeed}" class="slider" id="speed-selector">
-      fast
-      <br />
-      <span id="${SPEED_DISPLAY_ID}">${defaultSpeed}</span>
-    </p>
+      <div>
+      <p>
+        slow
+        <input type="range" min="10" max="200" value="${defaultSpeed}" class="slider" id="speed-selector">
+        fast
+        <br />
+        <span id="${SPEED_DISPLAY_ID}">${defaultSpeed}</span>
+      </p>
 
-    <div>
-      <h2>Scoreboard</h2>
-      <label>Name: <input type="text" id=${NAME_INPUT_ID}></input></label>
-      <div id="${SCOREBOARD_ID}"></div>
+      <div>
+        <h2>Scoreboard</h2>
+        <label>Name: <input type="text" id=${NAME_INPUT_ID}></input></label>
+        <div id="${SCOREBOARD_ID}"></div>
+      </div>
     </div>
   </div>
 `
