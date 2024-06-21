@@ -2,7 +2,6 @@ import { getScoreboardData, scoreboardLimit, writeHighscore } from "./firebase"
 import { LOCALSTORAGE_NAME_ID, SCOREBOARD_SELECTOR } from "./ids"
 
 let scoreboardData: Array<{ score: number; name: string; date: string }> = []
-let name = "Anon"
 
 export function loadScoreboard() {
   getScoreboardData().then(
@@ -21,6 +20,10 @@ export function loadScoreboard() {
   )
 }
 
+export function getName() {
+  return localStorage.getItem(LOCALSTORAGE_NAME_ID) ?? "Anon"
+}
+
 export function addHighScoreIfNeeded(score: number) {
   if (
     scoreboardData.length < scoreboardLimit ||
@@ -28,7 +31,7 @@ export function addHighScoreIfNeeded(score: number) {
   ) {
     writeHighscore({
       score,
-      name,
+      name: getName(),
       date: new Date().toISOString(),
     }).then(
       () => {
@@ -42,7 +45,6 @@ export function addHighScoreIfNeeded(score: number) {
 }
 
 export function updateName(newName: string) {
-  name = newName
   localStorage.setItem(LOCALSTORAGE_NAME_ID, newName)
 }
 

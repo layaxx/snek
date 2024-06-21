@@ -2,7 +2,6 @@ import { setupEventHandlers } from "./event-handlers"
 import {
   GAME_AREA_ID,
   HIGHSCORE_ID,
-  LOCALSTORAGE_NAME_ID,
   NAME_INPUT_ID,
   NAME_INPUT_SELECTOR,
   PAUSE_BUTTON_ID,
@@ -10,7 +9,7 @@ import {
   SCORE_ID,
   SPEED_DISPLAY_ID,
 } from "./ids"
-import { loadScoreboard } from "./scoreboard"
+import { getName, loadScoreboard } from "./scoreboard"
 import {
   defaultSpeed,
   gameAreaSize,
@@ -54,11 +53,10 @@ function init() {
 
   loadScoreboard()
 
-  const name = localStorage.getItem(LOCALSTORAGE_NAME_ID) ?? "Anon"
   const nameInput =
     document.querySelector<HTMLInputElement>(NAME_INPUT_SELECTOR)
 
-  if (nameInput) nameInput.value = name
+  if (nameInput) nameInput.value = getName()
 }
 
 init()

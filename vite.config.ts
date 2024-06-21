@@ -1,5 +1,5 @@
 const config = {
-  base: "snek",
+  base: "/snek",
 }
 
 export default config
